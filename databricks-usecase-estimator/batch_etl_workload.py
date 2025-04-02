@@ -12,9 +12,9 @@ def show_batch_etl_estimator():
   #Get Num ETL Jobs
   num_etl_opts = {
         "10 - 20": 1,
-        "20 - 49": 3,
-        "50 - 99": 8,
-        "99+": 20
+        "20 - 49": 2,
+        "50 - 99": 6,
+        "99+": 12
     }
   
   etl_type_opts = {
