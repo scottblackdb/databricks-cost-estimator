@@ -29,8 +29,8 @@ def show_dw_estimator():
       "100GB - 500GB": 2,
       "500GB - 1TB": 2.5,
       "1TB - 10TB": 3,
-      "10TB - 50TB": 6,
-      "50TB+": 12
+      "10TB - 50TB": 5,
+      "50TB+": 8
   }
 
   row1 = st.container()
@@ -60,7 +60,7 @@ def show_dw_estimator():
   with dat:
     #Get DW Concurrent Users
     data_opts_sel = st.selectbox(
-          "Data Size",
+          "Active Data Set Size",
           list(data_size_opts.keys())
     )
 
