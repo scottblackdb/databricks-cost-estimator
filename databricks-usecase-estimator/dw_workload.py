@@ -11,6 +11,7 @@ def show_dw_estimator():
 
   #Get DW Running Hours
   dw_hours_opts = {
+        "1 - 2 ": .2,
         "6 - 8": 1,
         "10 - 12": 1.5,
         "24": 3
