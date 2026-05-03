@@ -2,10 +2,6 @@ import streamlit as st
 
 import db_config
 
-config = {
-  "est": 0,
-  "workload_type": "Analytics / Data Engineers"
-}
 
 def show_interactive_estimator():
   st.subheader("Analytics / Data Engineers")
@@ -29,11 +25,12 @@ def show_interactive_estimator():
     )
     data_size = data_size_opts[data_opts_sel]
 
-    config["est"] = create_interactive_estimate(num_ppl, data_size)
+  return {
+      "est":           create_interactive_estimate(num_ppl, data_size),
+      "workload_type": "Analytics / Data Engineers",
+  }
 
-    return config
 
 def create_interactive_estimate(num_ppl, data_size):
   c = db_config.load_constants("interactive")
-  est = round(num_ppl * data_size * c["base_daily_rate"] * c["days_per_month"], 2)
-  return est
+  return round(num_ppl * data_size * c["base_daily_rate"] * c["days_per_month"], 2)

@@ -4,16 +4,25 @@ command: [
   "db_estimator.py"
 ]
 
-# A Lakebase Postgres resource must be attached to this app with the
-# resource key `postgres`. Databricks Apps will inject the connection
-# details as the following env vars at runtime:
-#
-#   POSTGRES_HOST
-#   POSTGRES_PORT
-#   POSTGRES_DATABASE_NAME
-#   POSTGRES_USER
-#   POSTGRES_INSTANCE_NAME
-#
-# The app uses the Databricks SDK to mint a short-lived OAuth token for
-# the Lakebase instance and uses it as the Postgres password (see db_config.py).
-# Run schema.sql once against the bound database to seed the config tables.
+env:
+  # Lakebase endpoint path used by the SDK to mint an OAuth token. Format:
+  #   projects/<project>/branches/<branch>/endpoints/<endpoint>
+  # The values below MUST match the `resources` block at the bottom of this file.
+  - name: ENDPOINT_NAME
+    value: "projects/shared/branches/production/endpoints/primary"
+
+resources:
+  # Bind a Lakebase Postgres database to this app under the resource key
+  # `postgres`. Databricks Apps will auto-inject the connection details as
+  # PGHOST / PGPORT / PGUSER / PGDATABASE / PGSSLMODE. The app authenticates
+  # via OAuth: db_config.py calls
+  #   WorkspaceClient.postgres.generate_database_credential(endpoint=ENDPOINT_NAME)
+  # and uses the returned token as the Postgres password.
+  - name: postgres
+    type: postgres
+    project: shared
+    branch: production
+    endpoint: primary
+
+# Run schema.sql once against the bound database to seed the
+# cost_estimator.* config tables.

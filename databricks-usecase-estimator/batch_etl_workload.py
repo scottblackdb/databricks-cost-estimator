@@ -2,10 +2,6 @@ import streamlit as st
 
 import db_config
 
-config = {
-  "est": 0,
-  "workload_type": "Batch ETL"
-}
 
 def show_batch_etl_estimator():
   st.subheader("Batch ETL Estimator")
@@ -45,11 +41,12 @@ def show_batch_etl_estimator():
     )
     etl_feq = etl_feq_opts[feq_opts_sel]
 
-    config["est"] = create_batch_etl_estimate(etl_jobs, etl_type, data_size, etl_feq)
+  return {
+      "est":           create_batch_etl_estimate(etl_jobs, etl_type, data_size, etl_feq),
+      "workload_type": "Batch ETL",
+  }
 
-    return config
 
 def create_batch_etl_estimate(etl_jobs, etl_type, data_size, etl_feq):
   c = db_config.load_constants("batch_etl")
-  est = round(etl_jobs * etl_type * data_size * c["base_daily_rate"] * etl_feq, 2)
-  return est
+  return round(etl_jobs * etl_type * data_size * c["base_daily_rate"] * etl_feq, 2)

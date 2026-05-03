@@ -2,10 +2,6 @@ import streamlit as st
 
 import db_config
 
-config = {
-  "est": 0,
-  "workload_type": "Streaming/DLT"
-}
 
 def show_dlt_estimator():
   st.subheader("Streaming / DLT Estimator")
@@ -37,11 +33,12 @@ def show_dlt_estimator():
     )
     data_size = data_size_opts[data_opts_sel]
 
-    config["est"] = create_dlt_estimate(etl_jobs, etl_type, data_size)
+  return {
+      "est":           create_dlt_estimate(etl_jobs, etl_type, data_size),
+      "workload_type": "Streaming/DLT",
+  }
 
-    return config
 
 def create_dlt_estimate(etl_jobs, etl_type, data_size):
   c = db_config.load_constants("dlt")
-  est = round(etl_jobs * etl_type * data_size * c["base_daily_rate"] * c["frequency"], 2)
-  return est
+  return round(etl_jobs * etl_type * data_size * c["base_daily_rate"] * c["frequency"], 2)

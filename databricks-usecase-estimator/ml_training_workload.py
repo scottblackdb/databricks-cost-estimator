@@ -2,10 +2,6 @@ import streamlit as st
 
 import db_config
 
-config = {
-  "est": 0,
-  "workload_type": "ML Training"
-}
 
 def show_ml_training_estimator():
   st.subheader("ML Training")
@@ -32,12 +28,13 @@ def show_ml_training_estimator():
   with gput:
     gpu_trn = st.checkbox("Train on GPU")
 
-    config["est"] = create_training_estimate(num_ppl, data_size, gpu_trn)
+  return {
+      "est":           create_training_estimate(num_ppl, data_size, gpu_trn),
+      "workload_type": "ML Training",
+  }
 
-    return config
 
 def create_training_estimate(num_ppl, data_size, gpu_trn):
   c = db_config.load_constants("ml_training")
   gpu_modifier = c["gpu_modifier"] if gpu_trn else 1
-  est = round(num_ppl * data_size * c["base_daily_rate"] * c["days_per_month"] * gpu_modifier, 2)
-  return est
+  return round(num_ppl * data_size * c["base_daily_rate"] * c["days_per_month"] * gpu_modifier, 2)
