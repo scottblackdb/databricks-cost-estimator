@@ -1,13 +1,17 @@
-#storage is per gb per month, includes storage plus I/O per gb
-#dbus are priced per hour 
-#compute defaults to serverless except for ML
+"""Backward-compatible shim around db_config.load_rates().
 
-rates = {
-  "storage": .15,
-  "dw": .70,
-  "job": .45,
-  "ap": .95,
-  "ml": .55
-}
+Older code (e.g. get_estimate.py) imports this module and reads
+`set_rates.rates['storage']` / `set_rates.csp_modifier`. We preserve that
+surface area but back it with the Lakebase `cost_estimator.rates` table
+instead of hardcoded values.
+"""
 
-csp_modifier = 0
+import db_config
+
+
+def __getattr__(name):
+    if name == "rates":
+        return db_config.load_rates()
+    if name == "csp_modifier":
+        return db_config.load_rates().get("csp_modifier", 0)
+    raise AttributeError(name)

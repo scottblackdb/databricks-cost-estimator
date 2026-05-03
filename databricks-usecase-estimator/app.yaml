@@ -1,5 +1,19 @@
 command: [
-  "streamlit", 
+  "streamlit",
   "run",
   "db_estimator.py"
 ]
+
+# A Lakebase Postgres resource must be attached to this app with the
+# resource key `postgres`. Databricks Apps will inject the connection
+# details as the following env vars at runtime:
+#
+#   POSTGRES_HOST
+#   POSTGRES_PORT
+#   POSTGRES_DATABASE_NAME
+#   POSTGRES_USER
+#   POSTGRES_INSTANCE_NAME
+#
+# The app uses the Databricks SDK to mint a short-lived OAuth token for
+# the Lakebase instance and uses it as the Postgres password (see db_config.py).
+# Run schema.sql once against the bound database to seed the config tables.

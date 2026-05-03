@@ -1,5 +1,6 @@
 import streamlit as st
-import math
+
+import db_config
 
 config = {
   "est": 0,
@@ -9,18 +10,20 @@ config = {
 def show_ml_serving_estimator():
   st.subheader("ML Serving")
 
-  num_models = st.slider("Select number of model CPU endpoints", min_value=0, max_value=25, value=0, step=1)
+  c = db_config.load_constants("ml_serving")
+  num_models = st.slider(
+      "Select number of model CPU endpoints",
+      min_value=0,
+      max_value=int(c["max_models"]),
+      value=0,
+      step=1,
+  )
   config['est'] = create_serving_estimate(num_models)
   config['config'] = {'num_models': num_models}
   return config
 
 
 def create_serving_estimate(num_models):
-  #set the base day rate of classic CPI training at $30
-  base_daily_rate = 7
-  model_uptime = .8
-  #gpu_modifier = 4 if gpu_trn else 1
-
-  est = round(base_daily_rate * num_models * model_uptime * 30,2)
-
+  c = db_config.load_constants("ml_serving")
+  est = round(c["base_daily_rate"] * num_models * c["model_uptime"] * c["days_per_month"], 2)
   return est
